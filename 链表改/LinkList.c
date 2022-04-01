@@ -34,6 +34,10 @@ void Destroy_Ll(LinkList L) {
 //清空
 void Empty_Ll(LinkList L) {
 	LNode* tmp=NULL;
+	assert(L!=NULL);
+	if (!L) {
+		return;
+	}
 	while (L->Next) {
 		tmp = L->Next;
 		L->Next = tmp->Next;
@@ -43,9 +47,13 @@ void Empty_Ll(LinkList L) {
 
 //求链表长度
 int Length_Ll(LinkList L) {
+	if (!L) {
+		return ERROR;
+	}
 	int count = 0;
 	while (L->Next) {
 		count++;
+		L = L->Next;
 	}
 	return count;
 }
@@ -95,7 +103,7 @@ int Find_Ordet_Ll(LinkList L, ElementType e) {
 	if (tmp) {
 		return count;
 	}
-	return -1;
+	return ERROR;
 }
 
 //插入元素
@@ -104,6 +112,7 @@ Status Insert_Ll(LinkList L, int i, ElementType e) {
 	int j = 0;
 	while (tmp && j < i - 1) {
 		tmp = tmp->Next;
+		j++;
 	}
 	if (!tmp || j > i - 1) {
 		return ERROR;
@@ -116,4 +125,72 @@ Status Insert_Ll(LinkList L, int i, ElementType e) {
 	p->Next = tmp->Next;
 	tmp->Next = p;
 	return OK;
+}
+
+//删除元素
+Status Delete(LinkList L, int i) {
+	LNode* tmp ;
+	LNode* p = NULL;
+	int j = 0;
+	tmp = L;
+	if (!tmp) {
+		return ERROR;
+	}
+	while ((tmp->Next)&& j < i - 1) {
+		tmp = tmp->Next;
+		j++;
+	}
+	if (!(tmp->Next)|| j > i - 1) {
+		return ERROR;
+	}
+	p = tmp->Next;
+	tmp->Next = p->Next;
+	free(p);
+	return OK;
+}
+
+//头插法
+LinkList H_Great(LinkList L,int n) {
+	L = (LNode*)malloc(sizeof(LNode));
+	if (!L) {
+		return NULL;
+	}
+	L->Next = NULL;
+
+	int j = n;
+	while (j < 0) {
+		LNode* tmp = (LNode*)malloc(sizeof(LNode));
+		if (!tmp) {
+			return NULL;
+		}
+		scanf("%d", &tmp->Data);
+		tmp->Next = L->Next;
+		L->Next = tmp;
+		j--;
+	}
+	return L;
+}
+
+//尾插法
+LinkList T_Great(LinkList L, int n) {
+	L = (LNode*)malloc(sizeof(LNode));
+	LNode* t = L;
+	if (!L) {
+		return NULL;
+	}
+	L->Next = NULL;
+	
+	int j = 0;
+	while (j < n) {
+		LNode* tmp = (LNode*)malloc(sizeof(LNode));
+		if (!tmp) {
+			return NULL;
+		}
+		scanf("%d", &tmp->Data);
+		tmp->Next = t->Next;
+		t->Next = tmp;
+		t = t->Next;
+		n--;
+	}
+	return L;
 }
